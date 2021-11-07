@@ -1,5 +1,5 @@
 # graduation_project
-※git commit "this is content"  撰寫註解
+※git commit "this is content"  撰寫註解 "this is commit" 替換成你這次修改了什麼東西
 
 ※git push origin main 上傳Github
 
