@@ -1,5 +1,5 @@
 # graduation_project
-※可以用vscode上傳 比 CMD直觀 (點選左上角 Terminal 下面開始操作)
+※可以用vscode上傳(點選左上角 Terminal 下面開始操作) 比 CMD直觀 
 
 ※git add . 新增資料 
 
