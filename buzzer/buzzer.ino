@@ -14,13 +14,10 @@ int y;
 void setup() {
   Serial.begin(9600);
   pinMode(pinPz, OUTPUT);
-
 }
-
 void loop() {
   aaa(pinPz);
 }
-
 void aaa(int pin) {
   value1 = analogRead(analogPin0);
 
@@ -49,7 +46,6 @@ void aaa(int pin) {
     music();
   }
 }
-
 void music(){
   tone(pinPz,E5,150);
   delay(150);
