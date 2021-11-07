@@ -1,4 +1,6 @@
 # graduation_project
+※可以用vscode上傳 (左上角 Terminal 下面開始操作)
+
 ※git add . 新增資料 
 
 ※git commit -m "this is content"  撰寫註解 "this is commit" 替換成你這次修改了什麼東西 中英文都可以
