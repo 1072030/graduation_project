@@ -5,7 +5,7 @@ LICENSE: Public domain (use at your own risk)
 CONTACT: techbitar at gmail dot com (techbitar.com)
 */
 #include  <SoftwareSerial.h>
-SoftwareSerial BTSerial(10, 11); // RX | TX
+SoftwareSerial BTSerial(10, 11); // TX | RX
 void setup()
 {
   pinMode(9, OUTPUT);  // this pin will pull the HC-05 pin 34 (key pin) HIGH to switch module to AT mode
