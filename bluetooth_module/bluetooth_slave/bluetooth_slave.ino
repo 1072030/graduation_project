@@ -1,14 +1,16 @@
 #include  <SoftwareSerial.h>
+// 定義連接藍牙模組的序列埠
 SoftwareSerial BT(10, 11); // 接收腳, 傳送腳
 char val;  // 儲存接收資料的變數
 const byte LED_PIN = 13;  // 定義LED腳位
- 
+
 void setup() {
   // 設定HC-05藍牙模組，AT命令模式的連線速率。
   BT.begin(38400);
+  Serial.println("Ready to catch");
   pinMode(LED_PIN, OUTPUT);
 }
- 
+
 void loop() {
   // 若收到藍牙模組的資料，則送到「序列埠監控視窗」
   if (BT.available()) {
