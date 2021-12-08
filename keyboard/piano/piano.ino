@@ -22,14 +22,14 @@
 
 #include "Keyboard.h"
 
-const int DoPin = 3;          // input pin for pushbutton
-const int RePin = 4;
-const int MiPin = 5;
-const int FaPin = 6;
-const int SoPin = 7;
-const int LaPin = 8;
-const int SiPin = 9;
-const int DoHPin = 10;
+#define DoPin 3          // input pin for pushbutton
+#define RePin 4
+#define MiPin 5
+#define FaPin 6
+#define SoPin 7
+#define LaPin 8
+#define SiPin 9
+#define DoHPin 10
 int previousDoPinState = HIGH;   // for checking the state of a pushButton
 int previousRePinState = HIGH;
 int previousMiPinState = HIGH;
