@@ -1,7 +1,9 @@
 # All_project
 ※可以用vscode上傳(點選左上角 Terminal 下面開始操作) 比 CMD直觀 
 
-※git remote  新增分支
+※直接git clone https://github.com/1072030/project.git 再把專案丟上去最快
+
+※git remote add https://github.com/1072030/project.git 新增分支
 
 ※git add . 新增資料 
 
