@@ -32,19 +32,72 @@
     <title>Wifi 控制</title>
   </head>
   <body>
-    <div class="form-check form-switch">
-      <input
-        class="form-check-input"
-        type="checkbox"
-        role="switch"
-        id="flexSwitchCheckChecked"
-        checked
-        onclick="update('flexSwitchCheckChecked')"
-      />
-      <!-- onclick="update('flexSwitchCheckChecked')" -->
-      <label class="form-check-label" for="flexSwitchCheckChecked"
-        >Checked switch checkbox input</label
-      >
+    <div class="container" style="padding-top: 5%">
+      <div class="mid">
+        <div class="form-check form-switch" style="display: flex; width: 200px">
+          <label class="fontSize label">燈泡1</label>
+          <input
+            class="form-check-input fontSize input"
+            type="checkbox"
+            role="switch"
+            id="light1"
+            onclick="update(id)"
+          />
+        </div>
+      </div>
+      <div class="mid">
+        <div class="form-check form-switch" style="display: flex; width: 200px">
+          <label class="fontSize label">燈泡2</label>
+          <input
+            class="form-check-input fontSize input"
+            type="checkbox"
+            role="switch"
+            id="light2"
+            onclick="update(id)"
+          />
+        </div>
+      </div>
+      <div class="mid">
+        <div class="form-check form-switch" style="display: flex; width: 200px">
+          <label class="fontSize label">燈泡3</label>
+          <input
+            class="form-check-input fontSize input"
+            type="checkbox"
+            role="switch"
+            id="light3"
+            onclick="update(id)"
+          />
+        </div>
+      </div>
+      <div class="mid">
+        <div class="form-check form-switch" style="display: flex; width: 200px">
+          <label class="fontSize label">燈泡4</label>
+          <input
+            class="form-check-input fontSize input"
+            type="checkbox"
+            role="switch"
+            id="light4"
+            onclick="update(id)"
+          />
+        </div>
+      </div>
     </div>
   </body>
 </html>
+<style>
+  .fontSize {
+    font-size: 25px;
+  }
+  .label {
+    flex: 3 0 0;
+  }
+  .input {
+    flex: 1 0 0;
+  }
+  .mid {
+    margin-top: 3%;
+  }
+  .container {
+    background-color: aliceblue;
+  }
+</style>

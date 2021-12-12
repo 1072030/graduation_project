@@ -12,9 +12,22 @@ function update(name) {
   };
   firebase.initializeApp(config);
   const realtime = firebase.database();
-  var i = document.getElementById(name);
-  console.log(i.checked);
-  realtime.ref("switch").set({ light: i.checked });
+  var switches = document.getElementById(name);
+  console.log(switches.id);
+  switch (switches.id) {
+    case "light1":
+      realtime.ref("switch").update({ light1: switches.checked });
+      break;
+    case "light2":
+      realtime.ref("switch").update({ light2: switches.checked });
+      break;
+    case "light3":
+      realtime.ref("switch").update({ light3: switches.checked });
+      break;
+    case "light4":
+      realtime.ref("switch").update({ light4: switches.checked });
+      break;
+  }
 }
 
 $(function () {
@@ -31,10 +44,16 @@ $(function () {
   };
   firebase.initializeApp(config);
   const realtime = firebase.database();
-  var i = $("#flexSwitchCheckChecked");
-  console.log(i);
-  realtime.ref("switch").set({ light: true });
+  var light1 = document.getElementById("light1");
+  var light2 = document.getElementById("light2");
+  var light3 = document.getElementById("light3");
+  var light4 = document.getElementById("light4");
+  // const light = ["light1", "light2", "light3", "light4"];
   realtime.ref("switch").on("value", (snap) => {
-    console.log(snap.val().light);
+    light1.checked = snap.val().light1;
+    light2.checked = snap.val().light2;
+    light3.checked = snap.val().light3;
+    light4.checked = snap.val().light4;
+    console.log(snap.val().light1);
   });
 });
