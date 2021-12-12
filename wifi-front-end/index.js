@@ -48,12 +48,10 @@ $(function () {
   var light2 = document.getElementById("light2");
   var light3 = document.getElementById("light3");
   var light4 = document.getElementById("light4");
-  // const light = ["light1", "light2", "light3", "light4"];
   realtime.ref("switch").on("value", (snap) => {
     light1.checked = snap.val().light1;
     light2.checked = snap.val().light2;
     light3.checked = snap.val().light3;
     light4.checked = snap.val().light4;
-    console.log(snap.val().light1);
   });
 });
