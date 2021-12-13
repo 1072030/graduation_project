@@ -14,6 +14,7 @@ function update(name) {
   const realtime = firebase.database();
   var switches = document.getElementById(name);
   console.log(switches.id);
+  console.log(switches.checked);
   switch (switches.id) {
     case "light1":
       realtime.ref("switch").update({ light1: switches.checked });
