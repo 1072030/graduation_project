@@ -48,8 +48,7 @@ void setup() {
 }
 String status;
 void loop() {
-  status = Firebase.getString("/switch/light");
-  
+  status = Firebase.getString("/switch/light1");
   // handle error
   if (Firebase.failed()) {
       Serial.print("setting /number failed:");
@@ -58,14 +57,27 @@ void loop() {
   }else{
     if(status.toInt() == 1){
       Serial.println(status);
-      digitalWrite(LedPin, LOW);
+      digitalWrite(LedPin, HIGH);
     }else{
       Serial.println(status);
-      digitalWrite(LedPin, HIGH);
+      digitalWrite(LedPin, LOW);
     }
   }
-  
   delay(500);
+//  test = Firebase.getBool("/switch/light1");
+//  if (Firebase.failed()) {
+//      Serial.print("setting /number failed:");
+//      Serial.println(Firebase.error());  
+//      return;
+//  }else{
+//    if(test == false){
+//      Serial.println(test);
+//      digitalWrite(LedPin, LOW);
+//    }else{
+//      Serial.println(test);
+//      digitalWrite(LedPin, HIGH);
+//    }
+//  }
 //  
 //  // update value
 //  Firebase.setFloat("number", 43.0);
