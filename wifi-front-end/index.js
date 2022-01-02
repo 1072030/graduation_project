@@ -17,16 +17,24 @@ function update(name) {
   console.log(switches.checked);
   switch (switches.id) {
     case "light1":
-      realtime.ref("switch").update({ light1: switches.checked });
+      switches.checked
+        ? realtime.ref("switch").update({ light1: "1" })
+        : realtime.ref("switch").update({ light1: "0" });
       break;
     case "light2":
-      realtime.ref("switch").update({ light2: switches.checked });
+      switches.checked
+        ? realtime.ref("switch").update({ light2: "1" })
+        : realtime.ref("switch").update({ light2: "0" });
       break;
     case "light3":
-      realtime.ref("switch").update({ light3: switches.checked });
+      switches.checked
+        ? realtime.ref("switch").update({ light3: "1" })
+        : realtime.ref("switch").update({ light3: "0" });
       break;
     case "light4":
-      realtime.ref("switch").update({ light4: switches.checked });
+      switches.checked
+        ? realtime.ref("switch").update({ light4: "1" })
+        : realtime.ref("switch").update({ light4: "0" });
       break;
   }
 }
@@ -50,9 +58,17 @@ $(function () {
   var light3 = document.getElementById("light3");
   var light4 = document.getElementById("light4");
   realtime.ref("switch").on("value", (snap) => {
-    light1.checked = snap.val().light1;
-    light2.checked = snap.val().light2;
-    light3.checked = snap.val().light3;
-    light4.checked = snap.val().light4;
+    parseInt(snap.val().light1)
+      ? (light1.checked = true)
+      : (light1.checked = false);
+    parseInt(snap.val().light2)
+      ? (light2.checked = true)
+      : (light2.checked = false);
+    parseInt(snap.val().light3)
+      ? (light3.checked = true)
+      : (light3.checked = false);
+    parseInt(snap.val().light4)
+      ? (light4.checked = true)
+      : (light4.checked = false);
   });
 });
