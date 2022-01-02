@@ -25,9 +25,10 @@
 // Set these to run example.
 #define FIREBASE_HOST "beacon-backend-a8bf3-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "s5deCRVxfQdCAOVkjJ4T1MPBE2nsOEmFPcEyjeRk"
-#define WIFI_SSID "AmyChen"
-#define WIFI_PASSWORD "0982355465"
+#define WIFI_SSID "iPhone"
+#define WIFI_PASSWORD "12345678"
 #define LedPin 16  
+//Pin 16 = Pin D0
 void setup() {
   pinMode(LedPin, OUTPUT);
   Serial.begin(9600);

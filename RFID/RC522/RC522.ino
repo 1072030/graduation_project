@@ -8,7 +8,7 @@
 
 #define RST_PIN         9          
 #define SS_PIN          10 //RC522卡上的SDA
-#define LED_PIN 6
+#define LED_PIN 3
 MFRC522 mfrc522;   // 建立MFRC522實體
 
 char *reference;
@@ -52,9 +52,9 @@ void loop() {
       //在監控視窗中顯示比對的結果
       if(they_match){
         Serial.println(F("Match Success!"));
-        analogWrite(LED_PIN,255);
+        analogWrite(LED_PIN,HIGH);
         delay(1000);
-        analogWrite(LED_PIN,0);
+        analogWrite(LED_PIN,LOW);
       }else{
         Serial.println(F("Match Failed!"));
 
