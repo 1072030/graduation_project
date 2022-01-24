@@ -1,9 +1,6 @@
 /*
 PINOUT:
 RC522 MODULE    Uno/Nano     MEGA
-SDA             D10/*
-PINOUT:
-RC522 MODULE    Uno/Nano     MEGA
 SDA             D10          D9
 SCK             D13          D52
 MOSI            D11          D51
@@ -40,13 +37,12 @@ void setup()
   RC522_2.init();
   RC522_3.init();
   pinMode(3, OUTPUT);
+  
 }
 
 void loop()
 {
-  boolean check1=false;
-  boolean check2=false;
-  boolean check3=false;
+  boolean check1,check2,check3=false;
   /* Has a card been detected? */
   if (RC522_1.isCard())
   {
@@ -108,9 +104,7 @@ void loop()
     Serial.println();
   }
 
-Serial.println(check1);
-Serial.println(check2);
-Serial.println(check3);
+
   
   if(check1==true&&check2==true&&check3==true){
 digitalWrite(3,HIGH);
@@ -119,5 +113,8 @@ delay(1000);
 else{
   digitalWrite(3,LOW);
 }
+Serial.print(check1);
+Serial.print(check2);
+Serial.println(check3);
   
 }
