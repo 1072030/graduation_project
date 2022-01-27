@@ -69,14 +69,6 @@ void setup() {
   SPI.begin();                  // Init SPI bus
 
   /* Initializing Inputs and Outputs */
-  pinMode(GreenLed, OUTPUT);
-  digitalWrite(GreenLed, LOW);
-  pinMode(relayIN, OUTPUT);
-  digitalWrite(relayIN, HIGH);
-  pinMode(RedLed, OUTPUT);
-  digitalWrite(RedLed, LOW);
-
-
   /* looking for MFRC522 readers */
   for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
     mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
