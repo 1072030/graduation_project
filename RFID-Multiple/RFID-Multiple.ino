@@ -111,7 +111,7 @@ void loop() {
         }  
     }
     if (mfrc522[1].PICC_IsNewCardPresent() && mfrc522[1].PICC_ReadCardSerial()) {
-      String content = "";
+      content = "";
       Serial.print(F("Reader "));
       Serial.print(1);
       Serial.print(F(": Card UID:"));
@@ -124,7 +124,7 @@ void loop() {
         content.concat(String(mfrc522[1].uid.uidByte[i], HEX));
       }
       content.toUpperCase();
-        if( content.substring(1) == "B3 8C 4A 16"){
+        if(content.substring(1) == "B3 8C 4A 16"){
           Serial.println("reader : 0 Match ||||| But Not Correct reader");
         }
         if(content.substring(1) == "53 DA B9 16"){
@@ -133,8 +133,10 @@ void loop() {
         }  
     }
     if(reader1_count == 1){
+      Serial.println("Loop");
       CheckAgain(1);
     }else if(reader2_count == 1){
+      Serial.println("Loop");
       CheckAgain(0);
     }
     delay(100);
@@ -155,10 +157,13 @@ void dump_byte_array(byte *buffer, byte bufferSize) {
   }
 }
 void InitApp(){
+  digitalWrite(relayIN,LOW);
   reader1_count = 0;
   reader2_count = 0;
   Serial.println("InitApp");
-  delay(5000); //10秒緩衝reset
+  
+  delay(5000); //5秒緩衝reset
+  digitalWrite(relayIN, HIGH);
    for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
     mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
     Serial.print(F("Reader "));
