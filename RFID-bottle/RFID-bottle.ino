@@ -140,13 +140,9 @@ void InitApp(){
   
   delay(5000); //5秒緩衝reset
   digitalWrite(relayIN, HIGH);
-//   for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
-//    mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
-//    Serial.print(F("Reader "));
-//    Serial.print(reader);
-//    Serial.print(F(": "));
-//    mfrc522[reader].PCD_DumpVersionToSerial();
-//  }
+  for(uint8_t reader = 0; reader < NR_OF_READERS; ){
+    mfrc522[reader].PICC_HaltA();
+  }
 }
 void ResetVariable(){
   reader1_count = 0;
@@ -173,8 +169,8 @@ void CheckAgain(int readerId){
       }
       content.toUpperCase();
       tagContent.toUpperCase();
-      Serial.println("tagContent");
-      Serial.println(tagContent);
+//      Serial.println("tagContent");
+//      Serial.println(tagContent);
         if(content.substring(1) == tagContent.substring(1)  && readerId == 0){
           Serial.println("reader : 0 Match");
           reader1_count = reader1_count+1;
