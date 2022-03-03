@@ -3,13 +3,13 @@
 #include <MFRC522.h>
 
 #define RST_PIN         9          
-#define SS_PIN          10 //RC522卡上的SDA
+#define SS_PIN          7 //RC522卡上的SDA
 
 
 
 char *reference;
-int relayPin=2;                    // 連接繼電器腳位                       
-byte uid[]={0xB3, 0x8C, 0x4A, 0x16};  //這是我們指定的卡片UID，可由讀取UID的程式取得特定卡片的UID，再修改這行
+int relayPin=3;                    // 連接繼電器腳位                       
+byte uid[]={0xFA, 0x5D, 0x49, 0x26};  //這是我們指定的卡片UID，可由讀取UID的程式取得特定卡片的UID，再修改這行
 //byte carduid[] = {0x53,0xDA,0xB9,0x16};
 MFRC522 mfrc522;   // 建立 MFRC522
 
@@ -23,6 +23,7 @@ void setup()
   digitalWrite(relayPin, HIGH);
   Serial.println("可開始讀取卡片");
   Serial.println();
+  mfrc522.PCD_DumpVersionToSerial();
 }
 
 void loop() {
@@ -58,7 +59,7 @@ void loop() {
   Serial.print(" Message : ");
   content.toUpperCase();
   // 需改成自己RFID卡的UID
-  if (content.substring(1) == "B3 8C 4A 16")
+  if (content.substring(1) == "FA 5D 49 26")
   {
     Serial.println(content.substring(1));
     Serial.println(" 合法卡... ");
