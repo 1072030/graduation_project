@@ -51,8 +51,12 @@ int reader1_count = 0;
 int reader2_count = 0;
 bool access = false;
 String content = "";
+String tagContent = "";
 #define NR_OF_READERS   2
-
+byte tagArray[][4]={
+  {0xFA , 0xC6 , 0x87 ,0x26},
+  {0xFA , 0xED , 0x06 ,0x26}
+};
 byte ssPins[] = {SS_1_PIN, SS_2_PIN};
 
 // Create an MFRC522 instance :
@@ -88,50 +92,8 @@ void setup() {
 
 void loop() {
 
-  if (mfrc522[0].PICC_IsNewCardPresent() && mfrc522[0].PICC_ReadCardSerial()) {
-      content = "";
-      Serial.print(F("Reader "));
-      Serial.print(0);
-      Serial.print(F(": Card UID:"));
-      dump_byte_array(mfrc522[0].uid.uidByte, mfrc522[0].uid.size);
-      for (byte i = 0; i < mfrc522[0].uid.size; i++)
-      {
-        Serial.println(mfrc522[0].uid.uidByte[i] < 0x10 ? " 0" : " ");
-        Serial.println(mfrc522[0].uid.uidByte[i], HEX);
-        content.concat(String(mfrc522[0].uid.uidByte[i] < 0x10 ? " 0" : " "));
-        content.concat(String(mfrc522[0].uid.uidByte[i], HEX));
-      }
-      content.toUpperCase();
-        if(content.substring(1) == "B3 8C 4A 16"){
-          Serial.println("reader : 0 Match");
-          reader1_count = reader1_count+1;
-        }
-        if(content.substring(1) == "53 DA B9 16"){
-          Serial.println("reader : 1 Match ||||| But Not Correct reader");
-        }  
-    }
-    if (mfrc522[1].PICC_IsNewCardPresent() && mfrc522[1].PICC_ReadCardSerial()) {
-      content = "";
-      Serial.print(F("Reader "));
-      Serial.print(1);
-      Serial.print(F(": Card UID:"));
-      dump_byte_array(mfrc522[1].uid.uidByte, mfrc522[1].uid.size);
-      for (byte i = 0; i < mfrc522[1].uid.size; i++)
-      {
-        Serial.println(mfrc522[1].uid.uidByte[i] < 0x10 ? " 0" : " ");
-        Serial.println(mfrc522[1].uid.uidByte[i], HEX);
-        content.concat(String(mfrc522[1].uid.uidByte[i] < 0x10 ? " 0" : " "));
-        content.concat(String(mfrc522[1].uid.uidByte[i], HEX));
-      }
-      content.toUpperCase();
-        if(content.substring(1) == "B3 8C 4A 16"){
-          Serial.println("reader : 0 Match ||||| But Not Correct reader");
-        }
-        if(content.substring(1) == "53 DA B9 16"){
-          Serial.println("reader : 1 Match");
-          reader2_count = reader2_count+1;
-        }  
-    }
+  CheckAgain(0);
+  CheckAgain(1);
     if(reader1_count == 1){
       Serial.println("Loop");
       CheckAgain(1);
@@ -139,7 +101,7 @@ void loop() {
       Serial.println("Loop");
       CheckAgain(0);
     }
-    delay(100);
+    delay(200);
    if(reader1_count && reader2_count){
      InitApp();
    }
@@ -179,6 +141,7 @@ void ResetVariable(){
 void CheckAgain(int readerId){
   if (mfrc522[readerId].PICC_IsNewCardPresent() && mfrc522[readerId].PICC_ReadCardSerial()) {
       content = "";
+      tagContent = "";
       Serial.print(F("Reader "));
       Serial.print(readerId);
       Serial.print(F(": Card UID:"));
@@ -189,13 +152,16 @@ void CheckAgain(int readerId){
         Serial.println(mfrc522[readerId].uid.uidByte[i], HEX);
         content.concat(String(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " "));
         content.concat(String(mfrc522[readerId].uid.uidByte[i], HEX));
+          tagContent.concat(String(tagArray[readerId][i] < 0x10 ? " 0" : " "));
+          tagContent.concat(String(tagArray[readerId][i], HEX));
       }
       content.toUpperCase();
-        if(content.substring(1) == "B3 8C 4A 16" && readerId == 0){
+      tagContent.toUpperCase();
+        if(content.substring(1) == tagContent.substring(1) && readerId == 0){
           Serial.println("reader : 0 Match");
           reader1_count = reader1_count+1;
         }
-        if(content.substring(1) == "53 DA B9 16" && readerId == 1){
+        if(content.substring(1) == tagContent.substring(1) && readerId == 1){
           Serial.println("reader : 1 Match");
           reader2_count = reader2_count+1;
         }  
