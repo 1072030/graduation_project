@@ -29,6 +29,7 @@
 */
 
 #include <SPI.h>
+#include <Wire.h>
 #include <MFRC522.h>
 // PIN Numbers : RESET + SDAs
 #define RST_PIN         9
@@ -48,11 +49,13 @@ int reader2_count = 0;
 bool access = false;
 String content = "";
 String tagContent = "";
+String isDetect = "";
 #define NR_OF_READERS   2
-byte tagArray[][4]={
+byte tagArray[][4]={ //影片RFID
   {0x0A , 0x15 , 0x41 ,0x27},
   {0xFA , 0xEA , 0x4C ,0x26}
 };
+
 byte ssPins[] = {SS_1_PIN, SS_2_PIN};
 
 // Create an MFRC522 instance :
@@ -87,23 +90,13 @@ void setup() {
 */
 
 void loop() {
-
   CheckAgain(0);
   CheckAgain(1);
-    if(reader1_count == 1){
-      Serial.println("Loop");
-      CheckAgain(1);
-    }else if(reader2_count == 1){
-      Serial.println("Loop");
-      CheckAgain(0);
-    }
-    delay(200);
-   if(reader1_count && reader2_count){
-     InitApp();
-   }
-   ResetVariable();
+//  if(reader1_count && reader2_count){
+//    InitApp();
+//  }
+//  ResetVariable();
 }
-
 /**
    Helper routine to dump a byte array as hex values to Serial.
 */
@@ -130,14 +123,18 @@ void InitApp(){
     mfrc522[reader].PCD_DumpVersionToSerial();
   }
 }
-void ResetVariable(){
+void ResetVariable(){ 
   reader1_count = 0;
   reader2_count = 0;
+}
+void doorOpen(){
+  digitalWrite(relayIN,LOW);
+  delay(3000);
+  digitalWrite(relayIN,HIGH);
 }
 void CheckAgain(int readerId){
   if (mfrc522[readerId].PICC_IsNewCardPresent() && mfrc522[readerId].PICC_ReadCardSerial()) {
       content = "";
-      tagContent = "";
       Serial.print(F("Reader "));
       Serial.print(readerId);
       Serial.print(F(": Card UID:"));
@@ -148,18 +145,23 @@ void CheckAgain(int readerId){
         Serial.println(mfrc522[readerId].uid.uidByte[i], HEX);
         content.concat(String(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " "));
         content.concat(String(mfrc522[readerId].uid.uidByte[i], HEX));
-          tagContent.concat(String(tagArray[readerId][i] < 0x10 ? " 0" : " "));
-          tagContent.concat(String(tagArray[readerId][i], HEX));
       }
       content.toUpperCase();
       tagContent.toUpperCase();
-        if(content.substring(1) == tagContent.substring(1) && readerId == 0){
-          Serial.println("reader : 0 Match");
-          reader1_count = reader1_count+1;
+        if(content.substring(1) == "FA DF FA 26" && readerId == 0){//影片1
+          Serial.println("video 1 : connect");
+          isDetect="1";
         }
-        if(content.substring(1) == tagContent.substring(1) && readerId == 1){
-          Serial.println("reader : 1 Match");
-          reader2_count = reader2_count+1;
+        if(content.substring(1) == "FA DE 1B 26" && readerId == 0){//影片2
+          Serial.println("video 2 : connect");
+          isDetect="2";
+          delay(15000);
+          doorOpen();
+          
+        }
+        if(content.substring(1) == "" && readerId == 1){//人員設定
+          Serial.println("identity confirm");
+          doorOpen();
         }  
       }
 }
