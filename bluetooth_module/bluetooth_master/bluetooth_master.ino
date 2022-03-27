@@ -21,7 +21,6 @@ void setup()                             //  setup程式
   BTSerial.begin(38400);
   //  設定控制HC-05藍芽模組之串列埠BTSerial鮑率為38400bps，此亦為HC-05藍芽模組預設鮑率
 }                                     //  結束setup程式
-
 void loop()                              //  loop程式
 {                                      //  進入loop程式
   // Keep reading from HC-05 and send to Arduino Serial Monito
@@ -46,7 +45,6 @@ void loop()                              //  loop程式
       }                                //  結束if敘述
     }                                  //  結束if敘述
   }                                    //  結束if敘述
-
   // Keep reading from Arduino Serial Monitor and send to HC-05
   if (Serial.available())
   //  若與電腦連線之Serial Port接收到字元

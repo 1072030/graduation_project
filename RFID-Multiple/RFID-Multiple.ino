@@ -27,20 +27,15 @@
    SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
 
 */
-
 #include <SPI.h>
 #include <MFRC522.h>
 // PIN Numbers : RESET + SDAs
 #define RST_PIN         9
 #define SS_1_PIN        7
 #define SS_2_PIN        6
-
 // Led and Relay PINS
 #define relayIN         3
-
-
 // List of Tags UIDs that are allowed to open the puzzle
-
 // Inlocking status :
 int tagcount = 0;
 int reader1_count = 0;
@@ -57,12 +52,10 @@ byte ssPins[] = {SS_1_PIN, SS_2_PIN};
 
 // Create an MFRC522 instance :
 MFRC522 mfrc522[NR_OF_READERS];
-
 /**
    Initialize.
 */
 void setup() {
-
   Serial.begin(9600);           // Initialize serial communications with the PC
   while (!Serial);              // Do nothing if no serial port is opened (added for Arduinos based on ATMEGA32U4)
 

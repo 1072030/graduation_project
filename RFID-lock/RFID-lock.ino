@@ -18,7 +18,6 @@ void setup()
 {
             // 設定繼電器接腳為輸出腳位      // 設定綠LED燈接腳為輸出腳位
   Serial.begin(9600);
-  
   pinMode(relayPin, OUTPUT);
   SPI.begin();
   mfrc522.PCD_Init(SS_PIN, RST_PIN);

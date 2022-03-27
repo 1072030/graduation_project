@@ -18,7 +18,7 @@ void setup()                             //  setup程式
   //  開啟 Serial Port透過USB(uart)方式與電腦通信，鮑率為 38400bps (Bits Per Second)
   Serial.print("Enter AT commands:");
   //  透過USB(uart)傳輸字串"Enter AT commands:"
-  BTSerial.begin(38400);
+  BTSerial.begin(4800);//設定是4800
   //  設定控制HC-05藍芽模組之串列埠BTSerial鮑率為38400bps，此亦為HC-05藍芽模組預設鮑率
 }                                     //  結束setup程式
 
