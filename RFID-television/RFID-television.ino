@@ -67,11 +67,11 @@ void loop() {
     Serial.println(content.substring(1));
     Serial.println("合法卡");
     Serial.println();
-//    isDetect = "1";
-//    Serial.println(isDetect);
-    digitalWrite(relayPin, LOW);               // 繼電器常開端(NO)導通
-    delay(2000);                                // 延遲2秒
-    digitalWrite(relayPin, HIGH);                // 繼電器常閉端(NC)導通
+    isDetect = "1";
+    Serial.println(isDetect);
+//    digitalWrite(relayPin, LOW);               // 繼電器常開端(NO)導通
+//    delay(2000);                                // 延遲2秒
+//    digitalWrite(relayPin, HIGH);                // 繼電器常閉端(NC)導通
 //    mfrc522.PCD_Init(SS_PIN, RST_PIN);
 //    Serial.println(" 不合法卡...");
 //    Serial.println();
@@ -79,8 +79,12 @@ void loop() {
     Serial.println(content.substring(1));
     Serial.println("合法卡");
     Serial.println();
-//    isDetect = "2";
-//    Serial.println(isDetect);
+    isDetect = "2";
+    Serial.println(isDetect);
+  }
+  else
+  {
+    digitalWrite(relayPin, HIGH);                // 繼電器常閉端(NC)導通                            
   }
 }
 /**
