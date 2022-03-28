@@ -1,10 +1,9 @@
 #include  <SoftwareSerial.h>              //  引用<SoftwareSerial.h>函式庫
 //***定義變數區***
-#define Bluetooth_KEY 13
 //  定義藍芽傳輸模組KEY接腳連接至arduino第9接腳
-#define Bluetooth_RxD 9
+#define Bluetooth_RxD 5
 //  定義藍芽傳輸模組RxD接腳連接至arduino第11接腳
-#define Bluetooth_TxD 8
+#define Bluetooth_TxD 6
 //  定義藍芽傳輸模組TxD接腳連接至arduino第10接腳
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 //  建立軟體定義串列埠BTSerial，用以控制藍芽模組
@@ -18,7 +17,7 @@ void setup()                             //  setup程式
   //  開啟 Serial Port透過USB(uart)方式與電腦通信，鮑率為 38400bps (Bits Per Second)
   Serial.print("Enter AT commands:");
   //  透過USB(uart)傳輸字串"Enter AT commands:"
-  BTSerial.begin(38400);
+  BTSerial.begin(4800);
   //  設定控制HC-05藍芽模組之串列埠BTSerial鮑率為38400bps，此亦為HC-05藍芽模組預設鮑率
 }                                     //  結束setup程式
 void loop()                              //  loop程式
