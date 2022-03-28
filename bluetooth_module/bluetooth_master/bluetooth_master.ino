@@ -1,19 +1,32 @@
-#include  <SoftwareSerial.h>              //  引用<SoftwareSerial.h>函式庫
+#include <SoftwareSerial.h>              //  引用<SoftwareSerial.h>函式庫
+#include <SPI.h>
+#include <Wire.h>
+#include <MFRC522.h>
 //***定義變數區***
 //  定義藍芽傳輸模組KEY接腳連接至arduino第9接腳
 #define Bluetooth_RxD 5
 //  定義藍芽傳輸模組RxD接腳連接至arduino第11接腳
 #define Bluetooth_TxD 6
 //  定義藍芽傳輸模組TxD接腳連接至arduino第10接腳
+#define RST_PIN         9          
+#define SS_PIN          7 //RC522卡上的SDA
+#define relayPin        3
+MFRC522 mfrc522;
+String isDetect = "";
+String content = "";
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 //  建立軟體定義串列埠BTSerial，用以控制藍芽模組
 void setup()                             //  setup程式
 {                                      //  進入setup程式
-  pinMode(Bluetooth_KEY, OUTPUT);
+  // pinMode(Bluetooth_KEY, OUTPUT);
   //  設定arduino連接藍芽傳輸模組KEY之接腳為輸出
-  digitalWrite(Bluetooth_KEY, HIGH);
+  // digitalWrite(Bluetooth_KEY, HIGH);
   //  設定藍芽傳輸模組KEY接腳為HIGH(進入AT command模式)
+  pinMode(relayPin, OUTPUT);
   Serial.begin(38400);
+  SPI.begin();
+  mfrc522.PCD_Init(SS_PIN, RST_PIN);
+  mfrc522.PCD_DumpVersionToSerial();
   //  開啟 Serial Port透過USB(uart)方式與電腦通信，鮑率為 38400bps (Bits Per Second)
   Serial.print("Enter AT commands:");
   //  透過USB(uart)傳輸字串"Enter AT commands:"
@@ -57,4 +70,36 @@ void loop()                              //  loop程式
     BTSerial.write(Serial_read);
     //  將Serial_read字元傳送至藍芽模組
   }                                    //  結束if敘述
+  CheckRFID();
 }                                      //  結束loop程式
+void CheckRFID(){
+  if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
+      content = "";
+
+      Serial.print(F("Reader "));
+      Serial.print(F(": Card UID:"));
+//      dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
+      for (byte i = 0; i < mfrc522.uid.size; i++)
+      {
+        Serial.println(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+        Serial.println(mfrc522.uid.uidByte[i], HEX);
+        content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
+        content.concat(String(mfrc522.uid.uidByte[i], HEX));
+      }
+      content.toUpperCase();
+        if(content.substring(1) == "FA DF FA 26"){
+          Serial.println("reader : 0 Match");
+          digitalWrite(relayPin,LOW);
+          delay(2000);
+          digitalWrite(relayPin,HIGH);
+        }else if(content.substring(1) =="FA DE 1B 26"){
+          Serial.println(content.substring(1));
+          Serial.println("合法卡");
+          Serial.println();
+          isDetect = "2";
+          Serial.println(isDetect);
+        }else{
+          digitalWrite(relayPin, HIGH);
+        }
+      }
+}
