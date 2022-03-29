@@ -6,7 +6,7 @@
 //  定義藍芽傳輸模組KEY接腳連接至arduino第9接腳
 #define Bluetooth_RxD 5
 //  定義藍芽傳輸模組RxD接腳連接至arduino第11接腳
-#define Bluetooth_TxD 6
+#define Bluetooth_TxD 4
 //  定義藍芽傳輸模組TxD接腳連接至arduino第10接腳
 #define RST_PIN         9          
 #define SS_PIN          7 //RC522卡上的SDA
@@ -21,10 +21,11 @@ MFRC522 mfrc522;
 void setup()                             //  setup程式
 {                                      //  進入setup程式
   pinMode(relayPin, OUTPUT);
-  digitalWrite(relayPin, HIGH);
+  
   //  設定arduino連接藍芽傳輸模組KEY之接腳為輸出
   //  設定藍芽傳輸模組KEY接腳為HIGH(進入AT command模式)
   Serial.begin(38400);
+  digitalWrite(relayPin, HIGH);
   SPI.begin();
   mfrc522.PCD_Init(SS_PIN, RST_PIN);
   //  開啟 Serial Port透過USB(uart)方式與電腦通信，鮑率為 38400bps (Bits Per Second)
@@ -48,6 +49,13 @@ void loop()                              //  loop程式
     //  宣告BTSerial_read字元變數，用於記錄BTSerial.read()回傳字元
     BTSerial_read = BTSerial.read();
     //  將BTSerial.read()回傳字元填入BTSerial_read
+    if(BTSerial_read == '0'){
+      digitalWrite(relayPin,LOW);
+      BTSerial.println("LED OFF");
+      Serial.print("relayDown");
+      delay(2000);
+      digitalWrite(relayPin,HIGH);
+    }
     Serial.write(BTSerial_read);
     //  將BTSerial_read回傳至電腦
     if(BTSerial_read == '\n')
@@ -92,7 +100,7 @@ void CheckRFID(){
         content.concat(String(mfrc522.uid.uidByte[i], HEX));
       }
       content.toUpperCase();
-        if(content.substring(1) == ""){
+        if(content.substring(1) == "B3 EE 27 17"){
           Serial.println("reader : 0 Match");
           digitalWrite(relayPin,LOW);
           delay(2000);

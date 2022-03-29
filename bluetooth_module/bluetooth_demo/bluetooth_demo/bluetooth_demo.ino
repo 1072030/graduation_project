@@ -47,10 +47,7 @@ void setup()                             //  setup程式
 void loop()                              //  loop程式
 
 {                                      //  進入loop程式b
-  BTSerial.write("0");
-  delay(1000);
-  BTSerial.write("1");
-  delay(1000);
+
   // Keep reading from HC-05 and send to Arduino Serial Monitor
 
   if (BTSerial.available())

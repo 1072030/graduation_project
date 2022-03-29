@@ -10,7 +10,6 @@
 //  定義藍芽傳輸模組TxD接腳連接至arduino第10接腳
 #define RST_PIN         9          
 #define SS_PIN          7 //RC522卡上的SDA
-#define relayPin        3
 MFRC522 mfrc522;
 String isDetect = "";
 String content = "";
@@ -22,7 +21,6 @@ void setup()                             //  setup程式
   //  設定arduino連接藍芽傳輸模組KEY之接腳為輸出
   // digitalWrite(Bluetooth_KEY, HIGH);
   //  設定藍芽傳輸模組KEY接腳為HIGH(進入AT command模式)
-  pinMode(relayPin, OUTPUT);
   BTSerial.begin(4800);
   Serial.begin(38400);
   SPI.begin();  
@@ -36,7 +34,9 @@ void setup()                             //  setup程式
 }                                     //  結束setup程式
 void loop()                              //  loop程式
 {                                      //  進入loop程式
-//  CheckRFID();
+    CheckRFID();
+    
+    
   // Keep reading from HC-05 and send to Arduino Serial Monito
   if (BTSerial.available())
     //  若連接至藍芽模組之Serialport接收到字元
@@ -46,15 +46,6 @@ void loop()                              //  loop程式
     BTSerial_read = BTSerial.read();
     //  將BTSerial.read()回傳字元填入BTSerial_read
     Serial.write(BTSerial_read);
-    if(BTSerial_read == '0'){
-
-      BTSerial.println("LED OFF");
-      Serial.print("LED OFF");
-    }else if(BTSerial_read == '1'){
-  
-      BTSerial.println("LED ON");
-      Serial.print("LED OFF");
-    }
     //  將BTSerial_read回傳至電腦
     if(BTSerial_read == '\n')
     //  若BTSerial_read為換行字元
@@ -82,7 +73,7 @@ void loop()                              //  loop程式
     BTSerial.write(Serial_read);
     //  將Serial_read字元傳送至藍芽模組
   }                                    //  結束if敘述
-  CheckRFID();
+  
 }                                      //  結束loop程式
 void CheckRFID(){
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
@@ -103,7 +94,7 @@ void CheckRFID(){
           Serial.println("reader : 0 Match");
            isDetect = "1";
            Serial.println(isDetect);
-          
+          BTSerial.write("0");
         }else if(content.substring(1) =="FA DE 1B 26"){
           Serial.println(content.substring(1));
           Serial.println("合法卡");
@@ -111,8 +102,6 @@ void CheckRFID(){
           isDetect = "2";
           Serial.println(isDetect);
           BTSerial.write("0");
-        }else{
-          digitalWrite(relayPin, HIGH);
         }
       }
 }
