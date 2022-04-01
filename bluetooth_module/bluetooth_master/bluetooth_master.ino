@@ -13,6 +13,8 @@
 MFRC522 mfrc522;
 String isDetect = "";
 String content = "";
+bool isActiveVideo = false;
+bool isActiveFinal = false;
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 //  建立軟體定義串列埠BTSerial，用以控制藍芽模組
 void setup()                             //  setup程式
@@ -35,8 +37,6 @@ void setup()                             //  setup程式
 void loop()                              //  loop程式
 {                                      //  進入loop程式
     CheckRFID();
-    
-    
   // Keep reading from HC-05 and send to Arduino Serial Monito
   if (BTSerial.available())
     //  若連接至藍芽模組之Serialport接收到字元
@@ -73,12 +73,10 @@ void loop()                              //  loop程式
     BTSerial.write(Serial_read);
     //  將Serial_read字元傳送至藍芽模組
   }                                    //  結束if敘述
-  
 }                                      //  結束loop程式
 void CheckRFID(){
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
       content = "";
-
       Serial.print(F("Reader "));
       Serial.print(F(": Card UID:"));
 //      dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
@@ -90,20 +88,22 @@ void CheckRFID(){
         content.concat(String(mfrc522.uid.uidByte[i], HEX));
       }
       content.toUpperCase();
-        if(content.substring(1) == "FA DF FA 26"){
-          Serial.println("reader : 0 Match");
-           isDetect = "1";
-           Serial.println(isDetect);
-           delay(20000);
-          //BTSerial.write("0");
-        }else if(content.substring(1) =="FA DE 1B 26"){
-          Serial.println(content.substring(1));
-          Serial.println("合法卡");
-          Serial.println();
+      if(content.substring(1) == "FA DF FA 26"){
+        Serial.println("reader : 0 Match");
+        if(isActiveVideo == false){ //用布林來偵測播放影片
+          isActiveVideo = true;
+          isDetect = "1";
+          Serial.println(isDetect);
+        }
+        //BTSerial.write("0");
+      }else if(content.substring(1) =="FA DE 1B 26"){
+        if(isActiveFinal == false){
+          isActiveFinal = true;
           isDetect = "2";
           Serial.println(isDetect);
-          delay(10000);
+          delay(15000);
           BTSerial.write("0");
         }
       }
+    }
 }

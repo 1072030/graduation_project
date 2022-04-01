@@ -11,9 +11,6 @@
 #define RST_PIN         9          
 #define SS_PIN          7 //RC522卡上的SDA
 #define relayPin        3
-byte tagArray[][4]={
-  {0x0A , 0x15 , 0x41 ,0x27},
-};
 String content = "";
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 MFRC522 mfrc522;
@@ -21,7 +18,6 @@ MFRC522 mfrc522;
 void setup()                             //  setup程式
 {                                      //  進入setup程式
   pinMode(relayPin, OUTPUT);
-  
   //  設定arduino連接藍芽傳輸模組KEY之接腳為輸出
   //  設定藍芽傳輸模組KEY接腳為HIGH(進入AT command模式)
   Serial.begin(38400);
@@ -87,24 +83,23 @@ void loop()                              //  loop程式
 }                                      //  結束loop程式
 void CheckRFID(){
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
-      content = "";
-
-      Serial.print(F("Reader "));
-      Serial.print(F(": Card UID:"));
-//      dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
-      for (byte i = 0; i < mfrc522.uid.size; i++)
-      {
-        Serial.println(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-        Serial.println(mfrc522.uid.uidByte[i], HEX);
-        content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
-        content.concat(String(mfrc522.uid.uidByte[i], HEX));
-      }
-      content.toUpperCase();
-        if(content.substring(1) == "B3 EE 27 17"){
-          Serial.println("reader : 0 Match");
-          digitalWrite(relayPin,LOW);
-          delay(2000);
-          digitalWrite(relayPin,HIGH);
-        }
-      }
+    content = "";
+    Serial.print(F("Reader "));
+    Serial.print(F(": Card UID:"));
+    //dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
+    for (byte i = 0; i < mfrc522.uid.size; i++)
+    {
+      Serial.println(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+      Serial.println(mfrc522.uid.uidByte[i], HEX);
+      content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
+      content.concat(String(mfrc522.uid.uidByte[i], HEX));
+    }
+    content.toUpperCase();
+    if(content.substring(1) == "B3 EE 27 17"){
+      Serial.println("reader : 0 Match");
+      digitalWrite(relayPin,LOW);
+      delay(2000);
+      digitalWrite(relayPin,HIGH);
+    }
+  }
 }

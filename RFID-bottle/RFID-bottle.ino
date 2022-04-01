@@ -137,7 +137,6 @@ void InitApp(){
   reader3_count = 0;
   reader4_count = 0;
   Serial.println("InitApp");
-  
   delay(5000); //5秒緩衝reset
   digitalWrite(relayIN, HIGH);
   for(uint8_t reader = 0; reader < NR_OF_READERS; ){
@@ -152,40 +151,38 @@ void ResetVariable(){
 }
 void CheckAgain(int readerId){
   if (mfrc522[readerId].PICC_IsNewCardPresent() && mfrc522[readerId].PICC_ReadCardSerial()) {
-      content = "";
-      tagContent = "";
-      Serial.print(F("Reader "));
-      Serial.print(readerId);
-      Serial.print(F(": Card UID:"));
-      dump_byte_array(mfrc522[readerId].uid.uidByte, mfrc522[readerId].uid.size);
-      for (byte i = 0; i < mfrc522[readerId].uid.size; i++)
-      {
-        Serial.println(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " ");
-        Serial.println(mfrc522[readerId].uid.uidByte[i], HEX);
-        content.concat(String(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " "));
-        content.concat(String(mfrc522[readerId].uid.uidByte[i], HEX));
-        tagContent.concat(String(tagarray[readerId][i] < 0x10 ? " 0" : " "));
-        tagContent.concat(String(tagarray[readerId][i],HEX));
-      }
-      content.toUpperCase();
-      tagContent.toUpperCase();
-//      Serial.println("tagContent");
-//      Serial.println(tagContent);
-        if(content.substring(1) == tagContent.substring(1)  && readerId == 0){
-          Serial.println("reader : 0 Match");
-          reader1_count = reader1_count+1;
-        }
-        if(content.substring(1) == tagContent.substring(1)&& readerId == 1){
-          Serial.println("reader : 1 Match");
-          reader2_count = reader2_count+1;
-        }
-        if(content.substring(1) == tagContent.substring(1) && readerId == 2){
-          Serial.println("reader : 2 Match");
-          reader3_count = reader3_count+1;
-        }  
-        if(content.substring(1) == tagContent.substring(1) && readerId == 3){
-          Serial.println("reader : 3 Match");
-          reader4_count = reader4_count+1;
-        }    
-      }
+    content = "";
+    tagContent = "";
+    Serial.print(F("Reader "));
+    Serial.print(readerId);
+    Serial.print(F(": Card UID:"));
+    dump_byte_array(mfrc522[readerId].uid.uidByte, mfrc522[readerId].uid.size);
+    for (byte i = 0; i < mfrc522[readerId].uid.size; i++)
+    {
+      Serial.println(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " ");
+      Serial.println(mfrc522[readerId].uid.uidByte[i], HEX);
+      content.concat(String(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " "));
+      content.concat(String(mfrc522[readerId].uid.uidByte[i], HEX));
+      tagContent.concat(String(tagarray[readerId][i] < 0x10 ? " 0" : " "));
+      tagContent.concat(String(tagarray[readerId][i],HEX));
+    }
+    content.toUpperCase();
+    tagContent.toUpperCase();
+    if(content.substring(1) == tagContent.substring(1) && readerId == 0){
+      Serial.println("reader : 0 Match");
+      reader1_count = reader1_count + 1;
+    }
+    if(content.substring(1) == tagContent.substring(1) && readerId == 1){
+      Serial.println("reader : 1 Match");
+      reader2_count = reader2_count + 1;
+    }
+    if(content.substring(1) == tagContent.substring(1) && readerId == 2){
+      Serial.println("reader : 2 Match");
+      reader3_count = reader3_count + 1;
+    }  
+    if(content.substring(1) == tagContent.substring(1) && readerId == 3){
+      Serial.println("reader : 3 Match");
+      reader4_count = reader4_count + 1;
+    }    
+  }
 }
