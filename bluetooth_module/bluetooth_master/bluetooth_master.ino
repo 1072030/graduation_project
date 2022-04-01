@@ -94,13 +94,15 @@ void CheckRFID(){
           Serial.println("reader : 0 Match");
            isDetect = "1";
            Serial.println(isDetect);
-          BTSerial.write("0");
+           delay(20000);
+          //BTSerial.write("0");
         }else if(content.substring(1) =="FA DE 1B 26"){
           Serial.println(content.substring(1));
           Serial.println("合法卡");
           Serial.println();
           isDetect = "2";
           Serial.println(isDetect);
+          delay(10000);
           BTSerial.write("0");
         }
       }
