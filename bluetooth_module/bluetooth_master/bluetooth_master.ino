@@ -1,3 +1,6 @@
+#include <Event.h>
+#include <Timer.h>
+
 #include <SoftwareSerial.h>              //  引用<SoftwareSerial.h>函式庫
 #include <SPI.h>
 #include <Wire.h>
@@ -11,6 +14,11 @@
 #define RST_PIN         9          
 #define SS_PIN          7 //RC522卡上的SDA
 MFRC522 mfrc522;
+Timer TimerF;
+Timer TimerTV;
+int TimerCount = 0;
+int TimerEvent;
+int TimerEventTV;
 String isDetect = "";
 String content = "";
 bool isActiveVideo = false;
@@ -73,27 +81,30 @@ void loop()                              //  loop程式
     BTSerial.write(Serial_read);
     //  將Serial_read字元傳送至藍芽模組
   }                                    //  結束if敘述
+  TimerF.update();
+  TimerTV.update();
 }                                      //  結束loop程式
 void CheckRFID(){
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
       content = "";
-      Serial.print(F("Reader "));
-      Serial.print(F(": Card UID:"));
+//      Serial.print(F("Reader "));
+//      Serial.print(F(": Card UID:"));
 //      dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
       for (byte i = 0; i < mfrc522.uid.size; i++)
       {
-        Serial.println(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-        Serial.println(mfrc522.uid.uidByte[i], HEX);
+//        Serial.println(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+//        Serial.println(mfrc522.uid.uidByte[i], HEX);
         content.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
         content.concat(String(mfrc522.uid.uidByte[i], HEX));
       }
       content.toUpperCase();
       if(content.substring(1) == "FA DF FA 26"){
-        Serial.println("reader : 0 Match");
+//        Serial.println("reader : 0 Match");
         if(isActiveVideo == false){ //用布林來偵測播放影片
           isActiveVideo = true;
           isDetect = "1";
           Serial.println(isDetect);
+          TimerEventTV = TimerTV.every(31000,SetTimeOutTV);
         }
         //BTSerial.write("0");
       }else if(content.substring(1) =="FA DE 1B 26"){
@@ -101,9 +112,17 @@ void CheckRFID(){
           isActiveFinal = true;
           isDetect = "2";
           Serial.println(isDetect);
-          delay(15000);
-          BTSerial.write("0");
+          TimerEvent = TimerF.every(38500,SetTimeOut);
         }
       }
     }
+}
+void SetTimeOut(){
+  BTSerial.write("0");
+  isActiveFinal = false;
+  TimerF.stop(TimerEvent);
+}
+void SetTimeOutTV(){
+  isActiveVideo = false;
+  TimerTV.stop(TimerEventTV);
 }

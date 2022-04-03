@@ -14,6 +14,15 @@
 String content = "";
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 MFRC522 mfrc522;
+byte tagArray[][4] = {
+  {0x33, 0x2E, 0xBB, 0x16},
+  {0xE3, 0xDA, 0x03, 0x17},//偵測困難 捨棄
+  {0x83, 0xB1, 0x9D, 0x15},
+  {0xB3, 0xEE, 0x27, 0x17},
+  {0x53, 0xDA, 0xB9, 0x16},
+  {0x63, 0x40, 0xBC, 0x16},
+  {0x83, 0xE6, 0xA8, 0x16} 
+};
 //  建立軟體定義串列埠BTSerial，用以控制藍芽模組
 void setup()                             //  setup程式
 {                                      //  進入setup程式
@@ -45,13 +54,6 @@ void loop()                              //  loop程式
     //  宣告BTSerial_read字元變數，用於記錄BTSerial.read()回傳字元
     BTSerial_read = BTSerial.read();
     //  將BTSerial.read()回傳字元填入BTSerial_read
-    if(BTSerial_read == '0'){
-      digitalWrite(relayPin,LOW);
-      BTSerial.println("LED OFF");
-      Serial.print("relayDown");
-      delay(2000);
-      digitalWrite(relayPin,HIGH);
-    }
     Serial.write(BTSerial_read);
     //  將BTSerial_read回傳至電腦
     if(BTSerial_read == '\n')
@@ -95,11 +97,21 @@ void CheckRFID(){
       content.concat(String(mfrc522.uid.uidByte[i], HEX));
     }
     content.toUpperCase();
-    if(content.substring(1) == "B3 EE 27 17"){
-      Serial.println("reader : 0 Match");
-      digitalWrite(relayPin,LOW);
-      delay(2000);
-      digitalWrite(relayPin,HIGH);
+    for(byte i = 0;i < 7; i++){
+      String tagContent = "";
+      for(byte j = 0;j<4;j++){
+        tagContent.concat(String(tagArray[i][j] < 0x10 ? " 0" : " "));
+        tagContent.concat(String(tagArray[i][j],HEX));
+      }
+      tagContent.toUpperCase();
+      if(content.substring(1) == tagContent.substring(1)){
+        openDoor();
+      }
     }
   }
+}
+void openDoor(){
+  digitalWrite(relayPin,LOW);
+  delay(2000);
+  digitalWrite(relayPin,HIGH);
 }

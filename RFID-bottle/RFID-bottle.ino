@@ -42,8 +42,8 @@
 
 // List of Tags UIDs that are allowed to open the puzzle
 byte tagarray[][4] = {
-  {0x0A, 0x50, 0x8F, 0x27},
   {0xFA, 0xC1, 0x1E, 0x26},
+  {0x0A, 0x50, 0x8F, 0x27},
   {0x0A, 0x11, 0xBA, 0x27},
   {0xFA, 0x5D, 0x49, 0x26} 
 };
@@ -96,24 +96,24 @@ void loop() {
     CheckAgain(1);
     CheckAgain(2);
     CheckAgain(3);
-    if(reader1_count == 1){
+    if(reader1_count >= 1){
       CheckAgain(1);
       CheckAgain(2);
       CheckAgain(3);
-    }else if(reader2_count == 1){
+    }if(reader2_count >= 1){
       CheckAgain(0);
       CheckAgain(2);
       CheckAgain(3);
-    }else if(reader3_count == 1){
+    }if(reader3_count >= 1){
        CheckAgain(0);
       CheckAgain(1);
       CheckAgain(3);
-    }else if(reader4_count == 1){
+    }if(reader4_count >= 1){
       CheckAgain(1);
       CheckAgain(2);
       CheckAgain(3);
     }
-    delay(100);
+    
    if(reader1_count && reader2_count && reader3_count && reader4_count){
      InitApp();
    }
@@ -139,9 +139,6 @@ void InitApp(){
   Serial.println("InitApp");
   delay(5000); //5秒緩衝reset
   digitalWrite(relayIN, HIGH);
-  for(uint8_t reader = 0; reader < NR_OF_READERS; ){
-    mfrc522[reader].PICC_HaltA();
-  }
 }
 void ResetVariable(){
   reader1_count = 0;
