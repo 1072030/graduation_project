@@ -2,7 +2,6 @@
 #include <MFRC522.h>
 #include <SPI.h>
 //***定義變數區***
-#define Bluetooth_KEY 
 //  定義藍芽傳輸模組KEY接腳連接至arduino第9接腳
 #define Bluetooth_RxD 5
 //  定義藍芽傳輸模組RxD接腳連接至arduino第11接腳
@@ -54,6 +53,13 @@ void loop()                              //  loop程式
     //  宣告BTSerial_read字元變數，用於記錄BTSerial.read()回傳字元
     BTSerial_read = BTSerial.read();
     //  將BTSerial.read()回傳字元填入BTSerial_read
+    if(BTSerial_read == '0'){
+      digitalWrite(relayPin,LOW);
+      BTSerial.println("Relay OFF");
+      Serial.print("relayDown");
+      delay(2000);
+      digitalWrite(relayPin,HIGH);
+    }
     Serial.write(BTSerial_read);
     //  將BTSerial_read回傳至電腦
     if(BTSerial_read == '\n')
