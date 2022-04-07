@@ -117,12 +117,14 @@ void CheckRFID(){
       }
     }
 }
+void SetTimeOutTV(){
+  isActiveVideo = false;
+  Serial.println("0");
+  TimerTV.stop(TimerEventTV);
+}
 void SetTimeOut(){
   BTSerial.write("0");
   isActiveFinal = false;
+  Serial.println("0");
   TimerF.stop(TimerEvent);
-}
-void SetTimeOutTV(){
-  isActiveVideo = false;
-  TimerTV.stop(TimerEventTV);
 }

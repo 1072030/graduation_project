@@ -27,7 +27,8 @@
    SPI SCK     SCK          13 / ICSP-3   52        D13        ICSP-3           15
 
 */
-
+#include <Event.h>
+#include <Timer.h>
 #include <SPI.h>
 #include <MFRC522.h>
 // PIN Numbers : RESET + SDAs
@@ -38,11 +39,11 @@
 #define SS_4_PIN        4
 // Led and Relay PINS
 #define relayIN         3
-
+Timer TimerReset;
 
 // List of Tags UIDs that are allowed to open the puzzle
 byte tagarray[][4] = {
-  {0xFA, 0xC1, 0x1E, 0x26},
+  {0x0A, 0x6D, 0x50, 0x27},
   {0x0A, 0x50, 0x8F, 0x27},
   {0x0A, 0x11, 0xBA, 0x27},
   {0xFA, 0x5D, 0x49, 0x26} 
@@ -85,6 +86,7 @@ void setup() {
     mfrc522[reader].PCD_DumpVersionToSerial();
     //mfrc522[reader].PCD_SetAntennaGain(mfrc522[reader].RxGain_max);
   }
+  TimerReset.every(10000,TimerResetFc);
 }
 
 /*
@@ -92,6 +94,7 @@ void setup() {
 */
 
 void loop() {
+    TimerReset.update();
     CheckAgain(0);
     CheckAgain(1);
     CheckAgain(2);
@@ -131,6 +134,7 @@ void dump_byte_array(byte *buffer, byte bufferSize) {
   }
 }
 void InitApp(){
+
   digitalWrite(relayIN,LOW);
   reader1_count = 0;
   reader2_count = 0;
@@ -139,6 +143,14 @@ void InitApp(){
   Serial.println("InitApp");
   delay(5000); //5秒緩衝reset
   digitalWrite(relayIN, HIGH);
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
+    mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
+    Serial.print(F("Reader "));
+    Serial.print(reader);
+    Serial.print(F(": "));
+    mfrc522[reader].PCD_DumpVersionToSerial();
+    //mfrc522[reader].PCD_SetAntennaGain(mfrc522[reader].RxGain_max);
+  }
 }
 void ResetVariable(){
   reader1_count = 0;
@@ -180,6 +192,20 @@ void CheckAgain(int readerId){
     if(content.substring(1) == tagContent.substring(1) && readerId == 3){
       Serial.println("reader : 3 Match");
       reader4_count = reader4_count + 1;
-    }    
+    }
+    if(content.substring(1) == "B3 87 5F 15"){
+      Serial.println("All Use!~!");
+      InitApp();
+    }
+  }
+}
+void TimerResetFc(){
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
+    mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
+    Serial.print(F("Reader "));
+    Serial.print(reader);
+    Serial.print(F(": "));
+    mfrc522[reader].PCD_DumpVersionToSerial();
+    //mfrc522[reader].PCD_SetAntennaGain(mfrc522[reader].RxGain_max);
   }
 }

@@ -153,6 +153,10 @@ void CheckAgain(int readerId){
         if(content.substring(1) == tagContent.substring(1) && readerId == 1){
           Serial.println("reader : 1 Match");
           reader2_count = reader2_count+1;
-        }  
+        }
+         if(content.substring(1) == "B3 87 5F 15"){
+          Serial.println("All Use!~!");
+          InitApp();
+        }
       }
 }
