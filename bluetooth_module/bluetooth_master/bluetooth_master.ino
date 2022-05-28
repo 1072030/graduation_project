@@ -104,7 +104,7 @@ void CheckRFID(){
           isActiveVideo = true;
           isDetect = "1";
           Serial.println(isDetect);
-          TimerEventTV = TimerTV.every(31000,SetTimeOutTV);
+          TimerEventTV = TimerTV.every(30000,SetTimeOutTV);
         }
         //BTSerial.write("0");
       }else if(content.substring(1) =="FA DE 1B 26"){
@@ -112,7 +112,7 @@ void CheckRFID(){
           isActiveFinal = true;
           isDetect = "2";
           Serial.println(isDetect);
-          TimerEvent = TimerF.every(38500,SetTimeOut);
+          TimerEvent = TimerF.every(40300,SetTimeOut);
         }
       }
     }

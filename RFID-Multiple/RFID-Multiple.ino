@@ -29,6 +29,8 @@
 */
 #include <SPI.h>
 #include <MFRC522.h>
+#include <Event.h>
+#include <Timer.h>
 // PIN Numbers : RESET + SDAs
 #define RST_PIN         9
 #define SS_1_PIN        7
@@ -49,7 +51,7 @@ byte tagArray[][4]={
   {0xFA , 0xEA , 0x4C ,0x26}
 };
 byte ssPins[] = {SS_1_PIN, SS_2_PIN};
-
+Timer TimerF;
 // Create an MFRC522 instance :
 MFRC522 mfrc522[NR_OF_READERS];
 /**
@@ -73,6 +75,7 @@ void setup() {
     mfrc522[reader].PCD_DumpVersionToSerial();
     //mfrc522[reader].PCD_SetAntennaGain(mfrc522[reader].RxGain_max);
   }
+  TimerF.every(10000,TimerResetFc);
 }
 
 /*
@@ -80,9 +83,10 @@ void setup() {
 */
 
 void loop() {
-
+  TimerF.update();
   CheckAgain(0);
   CheckAgain(1);
+  
     if(reader1_count == 1){
       Serial.println("Loop");
       CheckAgain(1);
@@ -90,7 +94,7 @@ void loop() {
       Serial.println("Loop");
       CheckAgain(0);
     }
-    delay(200);
+//    delay(200);
    if(reader1_count && reader2_count){
      InitApp();
    }
@@ -141,22 +145,43 @@ void CheckAgain(int readerId){
         Serial.println(mfrc522[readerId].uid.uidByte[i], HEX);
         content.concat(String(mfrc522[readerId].uid.uidByte[i] < 0x10 ? " 0" : " "));
         content.concat(String(mfrc522[readerId].uid.uidByte[i], HEX));
-          tagContent.concat(String(tagArray[readerId][i] < 0x10 ? " 0" : " "));
-          tagContent.concat(String(tagArray[readerId][i], HEX));
+        tagContent.concat(String(tagArray[readerId][i] < 0x10 ? " 0" : " "));
+        tagContent.concat(String(tagArray[readerId][i], HEX));
       }
       content.toUpperCase();
       tagContent.toUpperCase();
-        if(content.substring(1) == tagContent.substring(1) && readerId == 0){
+//        if(content.substring(1) == tagContent.substring(1)){
+//          Serial.println("reader : 0 Match");
+//          reader1_count = reader1_count + 1;
+//        }
+//        if(content.substring(1) == tagContent.substring(1)){
+//          Serial.println("reader : 1 Match");
+//          reader2_count = reader2_count + 1;
+//        }
+        Serial.print("readerId:");
+        Serial.println(readerId);
+        if((content.substring(1) == "0A 15 41 27" || content.substring(1)== "FA EA 4C 26") && readerId == 0 ){
           Serial.println("reader : 0 Match");
-          reader1_count = reader1_count+1;
+          reader1_count = reader1_count + 1;
         }
-        if(content.substring(1) == tagContent.substring(1) && readerId == 1){
+        if((content.substring(1) == "0A 15 41 27" || content.substring(1)== "FA EA 4C 26") && readerId == 1){
           Serial.println("reader : 1 Match");
-          reader2_count = reader2_count+1;
+          reader2_count = reader2_count + 1;
         }
-         if(content.substring(1) == "B3 87 5F 15"){
+         if(content.substring(1) == "63 92 83 0D"){
           Serial.println("All Use!~!");
           InitApp();
         }
       }
+      
+}
+void TimerResetFc(){
+  for (uint8_t reader = 0; reader < NR_OF_READERS; reader++) {
+    mfrc522[reader].PCD_Init(ssPins[reader], RST_PIN);
+    Serial.print(F("Reader "));
+    Serial.print(reader);
+    Serial.print(F(": "));
+    mfrc522[reader].PCD_DumpVersionToSerial();
+    //mfrc522[reader].PCD_SetAntennaGain(mfrc522[reader].RxGain_max);
+  }
 }

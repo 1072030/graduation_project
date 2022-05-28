@@ -1,3 +1,5 @@
+#include <Event.h>
+#include <Timer.h>
 #include  <SoftwareSerial.h>              //  引用<SoftwareSerial.h>函式庫
 #include <MFRC522.h>
 #include <SPI.h>
@@ -13,6 +15,7 @@
 String content = "";
 SoftwareSerial BTSerial(Bluetooth_TxD, Bluetooth_RxD);
 MFRC522 mfrc522;
+Timer TimerF;
 byte tagArray[][4] = {
   {0x33, 0x2E, 0xBB, 0x16},
   {0xE3, 0xDA, 0x03, 0x17},//偵測困難 捨棄
@@ -41,10 +44,12 @@ void setup()                             //  setup程式
   Serial.println("可開始讀取卡片");
   Serial.println();
   mfrc522.PCD_DumpVersionToSerial();
+  TimerF.every(10000,TimerResetFc);
 }                                     //  結束setup程式
 
 void loop()                              //  loop程式
 {                                      //  進入loop程式
+  
   CheckRFID();
   // Keep reading from HC-05 and send to Arduino Serial Monito
   if (BTSerial.available())
@@ -89,6 +94,7 @@ void loop()                              //  loop程式
     BTSerial.write(Serial_read);
     //  將Serial_read字元傳送至藍芽模組
   }                                    //  結束if敘述
+  TimerF.update();
 }                                      //  結束loop程式
 void CheckRFID(){
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {
@@ -104,7 +110,7 @@ void CheckRFID(){
       content.concat(String(mfrc522.uid.uidByte[i], HEX));
     }
     content.toUpperCase();
-    for(byte i = 0;i < 7; i++){
+    for(byte i = 0;i < 8; i++){
       String tagContent = "";
       for(byte j = 0;j<4;j++){
         tagContent.concat(String(tagArray[i][j] < 0x10 ? " 0" : " "));
@@ -122,4 +128,7 @@ void openDoor(){
   delay(2000);
   digitalWrite(relayPin,HIGH);
   mfrc522.PCD_Init(SS_PIN, RST_PIN);
+}
+void TimerResetFc(){
+    mfrc522.PCD_Init(SS_PIN, RST_PIN);
 }

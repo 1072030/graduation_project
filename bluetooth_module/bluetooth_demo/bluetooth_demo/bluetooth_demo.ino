@@ -38,7 +38,7 @@ void setup()                             //  setup程式
 
   //  透過USB(uart)傳輸字串"Enter AT commands:"
 
-  BTSerial.begin(4800);
+  BTSerial.begin(38400);
 
   //  設定控制HC-05藍芽模組之串列埠BTSerial鮑率為38400bps，此亦為HC-05藍芽模組預設鮑率
 
@@ -122,5 +122,5 @@ void loop()                              //  loop程式
     //  將Serial_read字元傳送至藍芽模組
 
   }                                    //  結束if敘述
-  delay(1000);
+  
 }                                      //  結束loop程式

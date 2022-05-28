@@ -193,7 +193,7 @@ void CheckAgain(int readerId){
       Serial.println("reader : 3 Match");
       reader4_count = reader4_count + 1;
     }
-    if(content.substring(1) == "B3 87 5F 15"){
+    if(content.substring(1) == "B3 87 5F 15" || content.substring(1) == "63 92 83 0D"){
       Serial.println("All Use!~!");
       InitApp();
     }
